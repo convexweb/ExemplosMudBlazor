@@ -1,0 +1,57 @@
+﻿@page "/Exemplo_MudSelectMultiple"
+@rendermode RenderMode.InteractiveAuto
+
+<h1>MudSelect - Multiple</h1>
+
+<MudGrid>
+    <MudItem xs="12" md="6">
+        <MudSelect Label="Usuários" T="Usuario" @bind-Value="_selectedUsuario" @bind-SelectedValues="_lstSelectedUsuarios" MultiSelection="true" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))">
+            @foreach (var item in lstUsuarios.OrderBy(a => a.Nome))
+            {
+                <MudSelectItem Value="@item">@($"{item.Nome} - {item.Email}")</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="12" md="6">
+        Usuário(s) selecionado(s): <br /> 
+        @{
+            if (_lstSelectedUsuarios is not null && _lstSelectedUsuarios.Any())
+            {
+                <ul>
+                    @foreach(var usuario in _lstSelectedUsuarios.OrderBy(a => a.Nome))
+                    {
+                        <li><h3>@usuario.ToString()</h3></li>
+                    }
+                </ul>
+            }
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+    private Usuario _selectedUsuario;
+    private IEnumerable<Usuario> _lstSelectedUsuarios;
+    private IEnumerable<Usuario> lstUsuarios = new List<Usuario>(){
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 1", Email = "emailusuario_1@email.com" },
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 2", Email = "emailusuario_2@email.com" },
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 3", Email = "emailusuario_3@email.com" },
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 4", Email = "emailusuario_4@email.com" },
+    };
+
+    private string GetMultiSelectionText(List<string> selectedValues)
+    {
+        return _lstSelectedUsuarios is null || !_lstSelectedUsuarios.Any() ? "Selecione um usuário" : $"{_lstSelectedUsuarios.Count()} usuário{(selectedValues.Count() > 1 ? "s foram" : " foi")} selecionado{(selectedValues.Count() > 1 ? "s" : "")}";
+    }
+
+    private class Usuario
+    {
+        public Guid UsuarioUID { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Nome} - {Email}";
+        }
+    }
+}

@@ -1,0 +1,41 @@
+﻿@page "/Exemplo_MudSelect"
+@rendermode RenderMode.InteractiveAuto
+
+<h1>MudSelect</h1>
+
+<MudGrid>
+    <MudItem xs="12" md="6">
+        <MudSelect Label="Usuários" T="Usuario" @bind-Value="_selectedUsuario">
+            <MudSelectItem Value="@(new Usuario())">Selecione uma opção</MudSelectItem>
+            @foreach (var item in lstUsuarios.OrderBy(a => a.Nome))
+            {
+                <MudSelectItem Value="@item">@($"{item.Nome} - {item.Email}")</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="12" md="6">
+        Usuário escolhido: <br /> <h3>@_selectedUsuario.ToString()</h3>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private Usuario _selectedUsuario = new Usuario();
+    private IEnumerable<Usuario> lstUsuarios = new List<Usuario>(){
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 1", Email = "emailusuario_1@email.com" },
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 2", Email = "emailusuario_2@email.com" },
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 3", Email = "emailusuario_3@email.com" },
+        new Usuario() { UsuarioUID = Guid.NewGuid(), Nome = "Usuário 4", Email = "emailusuario_4@email.com" },
+    };
+
+    private class Usuario
+    {
+        public Guid UsuarioUID { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Nome} - {Email}";
+        }
+    }
+}
